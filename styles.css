@@ -340,29 +340,34 @@ p{margin:0 0 1em}
 .app-box p:last-child{margin-bottom:0}
 .mini-demo{font-style:italic;font-size:.85rem!important;color:var(--accent)!important}
 
-/* Games brain dash */
+/* Agentic AI — gaming wellbeing explorer */
 .case-fun{border-color:color-mix(in srgb,var(--accent) 40%,var(--border))}
-.brain-dash{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.brain-col h4,.brain-viz h4{margin:0 0 8px;font-size:.9rem}
-.chip-cloud{display:flex;flex-wrap:wrap;gap:8px}
-.brain-chip{font:inherit;font-size:.82rem;font-weight:600;padding:8px 12px;border-radius:999px;border:1px solid var(--border);background:var(--bg-alt);color:var(--muted);cursor:pointer;min-height:40px}
-.brain-chip.is-active{background:var(--primary);border-color:var(--primary);color:#fff}
-.brain-chip.is-related{border-color:var(--accent);color:var(--primary);background:var(--chip);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 25%,transparent)}
-.brain-chip.is-dim{opacity:.35}
-[data-theme="dark"] .brain-chip.is-active{color:#0f1522}
-.brain-viz{grid-column:1/-1}
-.heat-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--border);border-radius:10px;background:var(--bg-alt)}
-.heat{border-collapse:collapse;width:100%;min-width:520px;font-size:.75rem}
-.heat th,.heat td{padding:6px 4px;text-align:center;border-bottom:1px solid var(--border)}
-.heat th{font-weight:700;color:var(--muted);position:sticky;top:0;background:var(--bg-alt)}
-.heat th:first-child,.heat td:first-child{text-align:left;padding-left:10px;font-weight:700;color:var(--text);white-space:nowrap}
-.heat td .cell{display:block;margin:0 auto;width:22px;height:22px;border-radius:5px;background:var(--border)}
-.heat td .cell.s1{background:color-mix(in srgb,var(--accent) 25%,var(--border))}
-.heat td .cell.s2{background:color-mix(in srgb,var(--accent) 55%,var(--border))}
-.heat td .cell.s3{background:var(--accent)}
-.heat tr.is-hl td,.heat td.is-hl{background:color-mix(in srgb,var(--accent) 12%,transparent)}
-.heat tr.is-dim{opacity:.35}
-.fun-blurb{margin:12px 0 0;font-size:.95rem;font-weight:600;color:var(--primary);min-height:2.4em}
+#case-ai{overflow:hidden}
+.wb-dash{overflow:hidden;display:flex;flex-direction:column;gap:14px}
+.wb-verdict{background:var(--bg-alt);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:14px 16px}
+.wb-verdict-badge{display:inline-block;font-size:.78rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#fff;background:var(--primary);padding:4px 10px;border-radius:999px;margin-bottom:8px}
+[data-theme="dark"] .wb-verdict-badge{color:#0f1522}
+.wb-verdict-tease{margin:0;font-size:.95rem;color:var(--muted);line-height:1.45}
+.wb-section h4{margin:0 0 8px;font-size:.9rem}
+.wb-optional{font-weight:500;color:var(--muted);font-size:.8rem}
+.chip-cloud{display:flex;flex-wrap:wrap;gap:8px;max-width:100%}
+.wb-chip{font:inherit;font-size:.82rem;font-weight:600;padding:8px 12px;border-radius:999px;border:1px solid var(--border);background:var(--bg-alt);color:var(--muted);cursor:pointer;min-height:40px;outline:2px solid transparent;outline-offset:-2px;transition:opacity .15s ease,background .15s ease,border-color .15s ease,color .15s ease}
+.wb-chip.is-active{background:var(--primary);border-color:var(--primary);color:#fff;outline-color:color-mix(in srgb,var(--accent) 55%,transparent)}
+.wb-chip.is-related{border-color:var(--accent);color:var(--primary);background:var(--chip);outline-color:color-mix(in srgb,var(--accent) 35%,transparent)}
+.wb-chip.is-dim{opacity:.4}
+[data-theme="dark"] .wb-chip.is-active{color:#0f1522}
+.wb-depth{background:var(--bg-alt);border:1px solid var(--border);border-radius:12px;padding:16px 18px;overflow:hidden}
+.wb-depth-top{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;gap:6px 12px;align-items:center;margin-bottom:10px}
+.wb-depth-top h4{margin:0;grid-column:1;grid-row:1;font-size:.95rem;color:var(--primary)}
+.wb-meter{grid-column:2;grid-row:1;height:10px;border-radius:999px;background:var(--border);overflow:hidden;min-width:0}
+.wb-meter-fill{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--primary));transition:width .25s ease}
+.wb-meter-label{grid-column:1/-1;grid-row:2;margin:0;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.wb-improves{margin:0 0 8px;font-size:.95rem;font-weight:600;color:var(--text)}
+.wb-evidence{margin:0 0 8px;font-size:.9rem;color:var(--muted);line-height:1.45}
+.wb-caveat{margin:0;font-size:.82rem;color:var(--muted);font-style:italic;border-top:1px dashed var(--border);padding-top:8px}
+.wb-caveat[hidden]{display:none!important}
+.wb-feeds{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+.wb-feeds span{font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:999px;background:var(--chip);color:var(--primary)}
 
 @media (max-width:760px){
   .case{padding:16px}
@@ -374,7 +379,10 @@ p{margin:0 0 1em}
   .bar-cell .price{font-size:.8rem}
   .impact-cards{grid-template-columns:1fr}
   .learn-grid{grid-template-columns:1fr}
-  .brain-dash{grid-template-columns:1fr}
+  .wb-depth-top{grid-template-columns:1fr}
+  .wb-depth-top h4{grid-column:1;grid-row:1}
+  .wb-meter{grid-column:1;grid-row:2}
+  .wb-meter-label{grid-row:3}
   .stepper-tabs button{font-size:.78rem;padding:8px 10px}
 }
 @media (max-width:960px){

@@ -384,144 +384,200 @@
   var mbaTabs = document.querySelector('[data-tabs="mba"]');
   if (mbaTabs) initTabs(mbaTabs);
 
-  /* --- Games × cognitive skills --- */
-  var GENRES = [
-    { id: 'fps', label: 'FPS' },
-    { id: 'strategy', label: 'Strategy' },
-    { id: 'action', label: 'Action' },
-    { id: 'rpg', label: 'RPG' },
-    { id: 'puzzle', label: 'Puzzle' },
-    { id: 'sim', label: 'Simulation' },
-    { id: 'sports', label: 'Sports' },
-    { id: 'rogue', label: 'Roguelike' }
+  /* --- Gaming wellbeing explorer --- */
+  var LEVERS = [
+    {
+      id: 'mood',
+      label: 'Mood & stress relief',
+      depth: 55,
+      depthLabel: 'Moderate',
+      improves: 'Short-term affect and “wind-down” — more calm-positive feelings when play feels engaging, not obligatory.',
+      evidence: 'Experimental flow / engagement work ties enjoyable play to better affect (more low-arousal positive, less high-arousal negative). Motivation research (intrinsic vs pressure) matters more than the clock. Themes from Royal Society Open Science / Oxford-linked player work: how you experience play beats raw hours.',
+      caveat: 'Handy for a mood reset — not a therapy substitute. Sleep displacement and compulsive play can flip the vibe.'
+    },
+    {
+      id: 'social',
+      label: 'Social relatedness',
+      depth: 78,
+      depthLabel: 'Stronger (social + motivation)',
+      improves: 'Feeling connected in-game links to higher affective wellbeing and life satisfaction — the SDT “relatedness” angle.',
+      evidence: 'Social / co-op play and online bonds can ease isolation and offer support. Public research themes (incl. SDT relatedness + motivation findings in RSOS / Oxford-linked work) put social + intrinsic motivation deeper than playtime alone. In-person closeness still tends to matter more for depression / anxiety outcomes.',
+      caveat: 'Online squads help — real-world closeness usually goes further for harder mental-health outcomes.'
+    },
+    {
+      id: 'flow',
+      label: 'Competence / flow',
+      depth: 62,
+      depthLabel: 'Moderate',
+      improves: 'Mastery and autonomy — that “in the zone” stretch where challenge meets skill.',
+      evidence: 'Flow during play is linked with better affect in experimental work (calmer positives up, edgy negatives down). Intrinsic motivation and feeling competent sit in the same family as the RSOS / Oxford-linked finding that motivation shapes wellbeing more than minutes.',
+      caveat: 'Extrinsic pressure (“I have to grind”) can blunt the upside. Keep the challenge fun, not forced.'
+    },
+    {
+      id: 'life',
+      label: 'Life satisfaction',
+      depth: 42,
+      depthLabel: 'Shallow for hours · moderate with dose',
+      improves: 'Overall life satisfaction shows weak average links to raw hours — dose and fit matter more than a long session counter.',
+      evidence: 'Large publisher + survey work (Royal Society Open Science / Oxford-linked player data) finds little to no average causal link between hours played and wellbeing — effects of time alone are probably very small. A Japan mobile survey (~5k) found up to ~1.5–2h/day associated with higher life satisfaction vs not playing; above ~2h some growth / optimism dimensions can dip. Treat that as one study, not a universal law.',
+      caveat: 'Playtime alone is a shallow lever. Watch sleep, compulsion, and whether gaming still fits the rest of life.'
+    }
   ];
-  var SKILLS = [
-    { id: 'iq', label: 'Cognitive load' },
-    { id: 'strat', label: 'Strategic thinking' },
-    { id: 'crit', label: 'Critical thinking' },
-    { id: 'react', label: 'Decision speed' },
-    { id: 'spatial', label: 'Spatial reasoning' },
-    { id: 'team', label: 'Teamwork / comms' }
+
+  var STYLES = [
+    {
+      id: 'coop',
+      label: 'Co-op / social',
+      blurb: 'Squad nights, guilds, voice chat — mainly feeds social relatedness (+ a side of mood).',
+      feeds: ['social', 'mood']
+    },
+    {
+      id: 'story',
+      label: 'Solo story',
+      blurb: 'Narrative single-player — mood unwind and gentle competence as the plot clicks.',
+      feeds: ['mood', 'flow']
+    },
+    {
+      id: 'comp',
+      label: 'Competitive',
+      blurb: 'Ranked / esports energy — competence & flow when it’s mastery-driven; extrinsic grind can sour it.',
+      feeds: ['flow', 'mood']
+    },
+    {
+      id: 'fit',
+      label: 'Fitness / active',
+      blurb: 'Move-while-you-play — mood lift plus a life-satisfaction nudge from feeling active.',
+      feeds: ['mood', 'life']
+    },
+    {
+      id: 'zen',
+      label: 'Puzzle zen',
+      blurb: 'Calm puzzles and chill loops — flow + mood without the lobby stress.',
+      feeds: ['flow', 'mood']
+    }
   ];
-  // Strength 0–3 (demo)
-  var MATRIX = {
-    fps:      { iq: 2, strat: 1, crit: 1, react: 3, spatial: 3, team: 2 },
-    strategy: { iq: 3, strat: 3, crit: 3, react: 1, spatial: 1, team: 2 },
-    action:   { iq: 1, strat: 1, crit: 1, react: 3, spatial: 2, team: 1 },
-    rpg:      { iq: 2, strat: 2, crit: 2, react: 1, spatial: 1, team: 2 },
-    puzzle:   { iq: 3, strat: 2, crit: 3, react: 1, spatial: 2, team: 0 },
-    sim:      { iq: 2, strat: 3, crit: 2, react: 1, spatial: 2, team: 1 },
-    sports:   { iq: 1, strat: 2, crit: 1, react: 3, spatial: 2, team: 3 },
-    rogue:    { iq: 2, strat: 3, crit: 2, react: 2, spatial: 1, team: 0 }
-  };
-  var BLURBS = {
-    fps: 'FPS: twitch decisions, spatial awareness, callouts with your squad. Espresso for your reaction loop.',
-    strategy: 'Strategy: long-horizon planning, resource trade-offs, reading the opponent three moves ahead.',
-    action: 'Action: keep calm under chaos — prioritise targets, dodge, commit.',
-    rpg: 'RPG: build choices, quest triage, reading systems — patience meets planning.',
-    puzzle: 'Puzzle: pure pattern-cracking and stubborn critical thinking. Brain gym.',
-    sim: 'Simulation: systems thinking — tweak one lever, watch the whole machine react.',
-    sports: 'Sports: timing, spacing, and yelling useful things at teammates.',
-    rogue: 'Roguelike: adapt or die — every run is a new decision tree.',
-    iq: 'Cognitive load: games that make you hold more moving parts in working memory.',
-    strat: 'Strategic thinking: plan, commit, revise when the map changes.',
-    crit: 'Critical thinking: spot the weak assumption, test it, pivot.',
-    react: 'Decision speed: good-enough calls under a ticking clock.',
-    spatial: 'Spatial reasoning: rotate the map in your head before your hands move.',
-    team: 'Teamwork / comms: win as a unit — info, roles, trust.'
-  };
 
-  var genreCloud = document.getElementById('genre-cloud');
-  var skillCloud = document.getElementById('skill-cloud');
-  var heatTable = document.getElementById('heat-table');
-  var funBlurb = document.getElementById('fun-blurb');
-  var activeGenre = null;
-  var activeSkill = null;
+  var leverCloud = document.getElementById('wb-levers');
+  var styleCloud = document.getElementById('wb-styles');
+  var depthTitle = document.getElementById('wb-depth-title');
+  var meterFill = document.getElementById('wb-meter-fill');
+  var meterLabel = document.getElementById('wb-meter-label');
+  var improvesEl = document.getElementById('wb-improves');
+  var evidenceEl = document.getElementById('wb-evidence');
+  var caveatEl = document.getElementById('wb-caveat');
+  var activeLever = null;
+  var activeStyle = null;
 
-  function buildBrainUI() {
-    if (!genreCloud || !skillCloud || !heatTable) return;
-    genreCloud.innerHTML = '';
-    skillCloud.innerHTML = '';
-    GENRES.forEach(function (g) {
-      var b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'brain-chip';
-      b.setAttribute('role', 'listitem');
-      b.setAttribute('data-genre', g.id);
-      b.textContent = g.label;
-      b.addEventListener('click', function () {
-        activeGenre = activeGenre === g.id ? null : g.id;
-        activeSkill = null;
-        syncBrain();
-      });
-      genreCloud.appendChild(b);
-    });
-    SKILLS.forEach(function (s) {
-      var b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'brain-chip';
-      b.setAttribute('role', 'listitem');
-      b.setAttribute('data-skill', s.id);
-      b.textContent = s.label;
-      b.addEventListener('click', function () {
-        activeSkill = activeSkill === s.id ? null : s.id;
-        activeGenre = null;
-        syncBrain();
-      });
-      skillCloud.appendChild(b);
-    });
-
-    var thead = heatTable.querySelector('thead');
-    var tbody = heatTable.querySelector('tbody');
-    thead.innerHTML = '<tr><th scope="col">Genre</th>' + SKILLS.map(function (s) {
-      return '<th scope="col">' + s.label.replace(' / ', '/') + '</th>';
-    }).join('') + '</tr>';
-    tbody.innerHTML = GENRES.map(function (g) {
-      return '<tr data-genre-row="' + g.id + '"><th scope="row">' + g.label + '</th>' + SKILLS.map(function (s) {
-        var v = MATRIX[g.id][s.id];
-        return '<td data-skill-col="' + s.id + '"><span class="cell s' + v + '" title="' + v + '/3"></span></td>';
-      }).join('') + '</tr>';
-    }).join('');
+  function leverById(id) {
+    for (var i = 0; i < LEVERS.length; i++) if (LEVERS[i].id === id) return LEVERS[i];
+    return null;
+  }
+  function styleById(id) {
+    for (var i = 0; i < STYLES.length; i++) if (STYLES[i].id === id) return STYLES[i];
+    return null;
   }
 
-  function syncBrain() {
-    if (!genreCloud) return;
-    Array.prototype.forEach.call(genreCloud.querySelectorAll('.brain-chip'), function (b) {
-      var id = b.getAttribute('data-genre');
-      b.classList.toggle('is-active', activeGenre === id);
-      var related = false;
-      if (activeSkill) related = MATRIX[id][activeSkill] >= 2;
-      b.classList.toggle('is-related', !activeGenre && !!activeSkill && related);
-      b.classList.toggle('is-dim', (!!activeGenre && activeGenre !== id) || (!!activeSkill && !related && activeSkill));
-      if (!activeGenre && !activeSkill) b.classList.remove('is-dim', 'is-related');
-    });
-    Array.prototype.forEach.call(skillCloud.querySelectorAll('.brain-chip'), function (b) {
-      var id = b.getAttribute('data-skill');
-      b.classList.toggle('is-active', activeSkill === id);
-      var related = false;
-      if (activeGenre) related = MATRIX[activeGenre][id] >= 2;
-      b.classList.toggle('is-related', !activeSkill && !!activeGenre && related);
-      b.classList.toggle('is-dim', (!!activeSkill && activeSkill !== id) || (!!activeGenre && !related && activeGenre));
-      if (!activeGenre && !activeSkill) b.classList.remove('is-dim', 'is-related');
-    });
-
-    Array.prototype.forEach.call(heatTable.querySelectorAll('tbody tr'), function (tr) {
-      var gid = tr.getAttribute('data-genre-row');
-      var rowOn = activeGenre === gid || (activeSkill && MATRIX[gid][activeSkill] >= 2);
-      tr.classList.toggle('is-hl', !!activeGenre && activeGenre === gid);
-      tr.classList.toggle('is-dim', (!!activeGenre && activeGenre !== gid) || (!!activeSkill && MATRIX[gid][activeSkill] < 2));
-      if (!activeGenre && !activeSkill) tr.classList.remove('is-dim', 'is-hl');
-      Array.prototype.forEach.call(tr.querySelectorAll('td'), function (td) {
-        var sid = td.getAttribute('data-skill-col');
-        td.classList.toggle('is-hl', activeSkill === sid || (activeGenre && MATRIX[gid][sid] >= 2 && activeGenre === gid));
+  function buildWbUI() {
+    if (!leverCloud || !styleCloud) return;
+    leverCloud.innerHTML = '';
+    styleCloud.innerHTML = '';
+    LEVERS.forEach(function (L) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'wb-chip';
+      b.setAttribute('role', 'listitem');
+      b.setAttribute('data-lever', L.id);
+      b.setAttribute('aria-pressed', 'false');
+      b.textContent = L.label;
+      b.addEventListener('click', function () {
+        activeLever = activeLever === L.id ? null : L.id;
+        syncWb();
       });
+      leverCloud.appendChild(b);
     });
-
-    if (activeGenre) funBlurb.textContent = BLURBS[activeGenre];
-    else if (activeSkill) funBlurb.textContent = BLURBS[activeSkill];
-    else funBlurb.textContent = 'Pick a genre or a skill — I’ll highlight the matchups.';
+    STYLES.forEach(function (S) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'wb-chip';
+      b.setAttribute('role', 'listitem');
+      b.setAttribute('data-style', S.id);
+      b.setAttribute('aria-pressed', 'false');
+      b.textContent = S.label;
+      b.addEventListener('click', function () {
+        activeStyle = activeStyle === S.id ? null : S.id;
+        if (activeStyle && !activeLever) {
+          // soft-highlight related levers; don't auto-pick one
+        }
+        syncWb();
+      });
+      styleCloud.appendChild(b);
+    });
   }
 
-  buildBrainUI();
-  syncBrain();
+  function syncWb() {
+    if (!leverCloud) return;
+    var style = activeStyle ? styleById(activeStyle) : null;
+    var related = style ? style.feeds : [];
+
+    Array.prototype.forEach.call(leverCloud.querySelectorAll('.wb-chip'), function (b) {
+      var id = b.getAttribute('data-lever');
+      var isActive = activeLever === id;
+      var isRel = !activeLever && related.indexOf(id) !== -1;
+      b.classList.toggle('is-active', isActive);
+      b.classList.toggle('is-related', isRel);
+      b.classList.toggle('is-dim', !!activeLever && !isActive);
+      if (!activeLever && !activeStyle) b.classList.remove('is-dim', 'is-related');
+      if (!activeLever && activeStyle) b.classList.toggle('is-dim', related.indexOf(id) === -1);
+      b.setAttribute('aria-pressed', String(isActive));
+    });
+
+    Array.prototype.forEach.call(styleCloud.querySelectorAll('.wb-chip'), function (b) {
+      var id = b.getAttribute('data-style');
+      var isActive = activeStyle === id;
+      var s = styleById(id);
+      var feedsActive = activeLever && s && s.feeds.indexOf(activeLever) !== -1;
+      b.classList.toggle('is-active', isActive);
+      b.classList.toggle('is-related', !activeStyle && !!activeLever && !!feedsActive);
+      b.classList.toggle('is-dim', (!!activeStyle && !isActive) || (!!activeLever && !activeStyle && !feedsActive));
+      if (!activeLever && !activeStyle) b.classList.remove('is-dim', 'is-related');
+      b.setAttribute('aria-pressed', String(isActive));
+    });
+
+    var L = activeLever ? leverById(activeLever) : null;
+    if (L) {
+      depthTitle.textContent = L.label;
+      meterFill.style.width = L.depth + '%';
+      meterLabel.textContent = 'Evidence depth · ' + L.depthLabel;
+      improvesEl.textContent = L.improves;
+      evidenceEl.textContent = L.evidence;
+      if (style && style.feeds.indexOf(L.id) !== -1) {
+        evidenceEl.textContent = L.evidence + ' Play-style cue: ' + style.blurb;
+      }
+      caveatEl.hidden = false;
+      caveatEl.textContent = L.caveat;
+    } else if (style) {
+      depthTitle.textContent = style.label;
+      meterFill.style.width = '50%';
+      meterLabel.textContent = 'Play-style map · pick a lever for depth';
+      improvesEl.textContent = style.blurb;
+      evidenceEl.textContent = 'Mainly feeds: ' + style.feeds.map(function (fid) {
+        var x = leverById(fid);
+        return x ? x.label : fid;
+      }).join(' · ') + '. Tap a highlighted lever to see how deep that evidence theme goes.';
+      caveatEl.hidden = false;
+      caveatEl.textContent = 'Illustrative mapping for a fun demo — not a prescription for how you should play.';
+    } else {
+      depthTitle.textContent = 'How deep?';
+      meterFill.style.width = '35%';
+      meterLabel.textContent = 'Pick a lever to explore depth';
+      improvesEl.textContent = 'What improves and how deep the evidence feels will show up here.';
+      evidenceEl.textContent = 'Start with a lever above — or peek at a play style to see which levers it mainly feeds.';
+      caveatEl.hidden = true;
+      caveatEl.textContent = '';
+    }
+  }
+
+  buildWbUI();
+  syncWb();
+
 })();
