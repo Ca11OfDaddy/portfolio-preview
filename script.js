@@ -384,200 +384,243 @@
   var mbaTabs = document.querySelector('[data-tabs="mba"]');
   if (mbaTabs) initTabs(mbaTabs);
 
-  /* --- Gaming wellbeing explorer --- */
-  var LEVERS = [
-    {
-      id: 'mood',
-      label: 'Mood & stress relief',
-      depth: 55,
-      depthLabel: 'Moderate',
-      improves: 'Short-term affect and “wind-down” — more calm-positive feelings when play feels engaging, not obligatory.',
-      evidence: 'Experimental flow / engagement work ties enjoyable play to better affect (more low-arousal positive, less high-arousal negative). Motivation research (intrinsic vs pressure) matters more than the clock. Themes from Royal Society Open Science / Oxford-linked player work: how you experience play beats raw hours.',
-      caveat: 'Handy for a mood reset — not a therapy substitute. Sleep displacement and compulsive play can flip the vibe.'
+  /* --- Agentic AI · digital arts RGM --- */
+  var aiStepper = document.querySelector('[data-stepper="ai-rgm"]');
+  if (aiStepper) initStepper(aiStepper);
+
+  /* White space niche chips */
+  var NICHE_COPY = {
+    marquetry: {
+      theme: 'Marquetry / yosegi',
+      themeP: 'Japanese wood inlay motifs are thinner on Etsy/CF than endless florals — authenticity cue for JP + design buyers.',
+      format: 'Seamless + POD',
+      formatP: 'Same art → seamless download pack and wallpaper / wall-art / home POD variants — not paper-only.',
+      geo: 'JP · US',
+      geoP: 'Demo pattern: JP buyers skew kimono / Japandi papers; US buyers lean leather & wood textures. Marquetry sits in both.'
     },
-    {
-      id: 'social',
-      label: 'Social relatedness',
-      depth: 78,
-      depthLabel: 'Stronger (social + motivation)',
-      improves: 'Feeling connected in-game links to higher affective wellbeing and life satisfaction — the SDT “relatedness” angle.',
-      evidence: 'Social / co-op play and online bonds can ease isolation and offer support. Public research themes (incl. SDT relatedness + motivation findings in RSOS / Oxford-linked work) put social + intrinsic motivation deeper than playtime alone. In-person closeness still tends to matter more for depression / anxiety outcomes.',
-      caveat: 'Online squads help — real-world closeness usually goes further for harder mental-health outcomes.'
+    kimono: {
+      theme: 'Kimono / Japandi',
+      themeP: 'Silk / Japandi paper niches still have room vs mass florals — proven buyer interest on JP-facing listings (demo signal).',
+      format: 'Seamless packs',
+      formatP: 'Strong as downloadable paper; POD wallpaper / home soft goods extend the same motif.',
+      geo: 'JP-led',
+      geoP: 'Demo: JP geo over-indexes. Pair with US wood/leather textures for a two-geo catalog story.'
     },
-    {
-      id: 'flow',
-      label: 'Competence / flow',
-      depth: 62,
-      depthLabel: 'Moderate',
-      improves: 'Mastery and autonomy — that “in the zone” stretch where challenge meets skill.',
-      evidence: 'Flow during play is linked with better affect in experimental work (calmer positives up, edgy negatives down). Intrinsic motivation and feeling competent sit in the same family as the RSOS / Oxford-linked finding that motivation shapes wellbeing more than minutes.',
-      caveat: 'Extrinsic pressure (“I have to grind”) can blunt the upside. Keep the challenge fun, not forced.'
+    charred: {
+      theme: 'Charred wood / grain',
+      themeP: 'Closest catalog cousin to marquetry — wood-grain seamless papers already exist as a texture lane (demo context).',
+      format: 'Texture + POD',
+      formatP: 'Works as seamless fill and as POD surface for home / apparel-style prints.',
+      geo: 'US-led',
+      geoP: 'Demo: US buyers lean leather & wood textures. Marquetry upgrades “wood” from stock grain to craft inlay.'
     },
-    {
-      id: 'life',
-      label: 'Life satisfaction',
-      depth: 42,
-      depthLabel: 'Shallow for hours · moderate with dose',
-      improves: 'Overall life satisfaction shows weak average links to raw hours — dose and fit matter more than a long session counter.',
-      evidence: 'Large publisher + survey work (Royal Society Open Science / Oxford-linked player data) finds little to no average causal link between hours played and wellbeing — effects of time alone are probably very small. A Japan mobile survey (~5k) found up to ~1.5–2h/day associated with higher life satisfaction vs not playing; above ~2h some growth / optimism dimensions can dip. Treat that as one study, not a universal law.',
-      caveat: 'Playtime alone is a shallow lever. Watch sleep, compulsion, and whether gaming still fits the rest of life.'
+    floral: {
+      theme: 'Commodity floral',
+      themeP: 'Saturated lane — high competitor density, race-to-bottom list prices. Avoid as hero; use only as contrast.',
+      format: 'Paper-only clutter',
+      formatP: 'Most listings stop at paper packs; little differentiation once the rose looks familiar.',
+      geo: 'Global mass',
+      geoP: 'No clear geo moat — everyone sells florals everywhere.'
     }
-  ];
+  };
 
-  var STYLES = [
-    {
-      id: 'coop',
-      label: 'Co-op / social',
-      blurb: 'Squad nights, guilds, voice chat — mainly feeds social relatedness (+ a side of mood).',
-      feeds: ['social', 'mood']
-    },
-    {
-      id: 'story',
-      label: 'Solo story',
-      blurb: 'Narrative single-player — mood unwind and gentle competence as the plot clicks.',
-      feeds: ['mood', 'flow']
-    },
-    {
-      id: 'comp',
-      label: 'Competitive',
-      blurb: 'Ranked / esports energy — competence & flow when it’s mastery-driven; extrinsic grind can sour it.',
-      feeds: ['flow', 'mood']
-    },
-    {
-      id: 'fit',
-      label: 'Fitness / active',
-      blurb: 'Move-while-you-play — mood lift plus a life-satisfaction nudge from feeling active.',
-      feeds: ['mood', 'life']
-    },
-    {
-      id: 'zen',
-      label: 'Puzzle zen',
-      blurb: 'Calm puzzles and chill loops — flow + mood without the lobby stress.',
-      feeds: ['flow', 'mood']
-    }
-  ];
+  var nicheChips = Array.prototype.slice.call(document.querySelectorAll('#ai-niche-chips .ai-chip'));
+  var gapCards = Array.prototype.slice.call(document.querySelectorAll('#ai-gap-grid .gap-card'));
 
-  var leverCloud = document.getElementById('wb-levers');
-  var styleCloud = document.getElementById('wb-styles');
-  var depthTitle = document.getElementById('wb-depth-title');
-  var meterFill = document.getElementById('wb-meter-fill');
-  var meterLabel = document.getElementById('wb-meter-label');
-  var improvesEl = document.getElementById('wb-improves');
-  var evidenceEl = document.getElementById('wb-evidence');
-  var caveatEl = document.getElementById('wb-caveat');
-  var activeLever = null;
-  var activeStyle = null;
-
-  function leverById(id) {
-    for (var i = 0; i < LEVERS.length; i++) if (LEVERS[i].id === id) return LEVERS[i];
-    return null;
-  }
-  function styleById(id) {
-    for (var i = 0; i < STYLES.length; i++) if (STYLES[i].id === id) return STYLES[i];
-    return null;
+  function setNiche(id) {
+    var copy = NICHE_COPY[id];
+    if (!copy) return;
+    nicheChips.forEach(function (c) {
+      var on = c.getAttribute('data-niche') === id;
+      c.classList.toggle('is-active', on);
+      c.setAttribute('aria-pressed', String(on));
+    });
+    gapCards.forEach(function (card) {
+      var forAttr = card.getAttribute('data-for') || '';
+      var on = forAttr.split(/\s+/).indexOf(id) !== -1;
+      card.classList.toggle('is-on', on);
+      card.classList.toggle('is-dim', !on);
+    });
+    var t = document.getElementById('ai-gap-theme');
+    var tp = document.getElementById('ai-gap-theme-p');
+    var f = document.getElementById('ai-gap-format');
+    var fp = document.getElementById('ai-gap-format-p');
+    var g = document.getElementById('ai-gap-geo');
+    var gp = document.getElementById('ai-gap-geo-p');
+    if (t) t.textContent = copy.theme;
+    if (tp) tp.textContent = copy.themeP;
+    if (f) f.textContent = copy.format;
+    if (fp) fp.textContent = copy.formatP;
+    if (g) g.textContent = copy.geo;
+    if (gp) gp.textContent = copy.geoP;
   }
 
-  function buildWbUI() {
-    if (!leverCloud || !styleCloud) return;
-    leverCloud.innerHTML = '';
-    styleCloud.innerHTML = '';
-    LEVERS.forEach(function (L) {
-      var b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'wb-chip';
-      b.setAttribute('role', 'listitem');
-      b.setAttribute('data-lever', L.id);
-      b.setAttribute('aria-pressed', 'false');
-      b.textContent = L.label;
-      b.addEventListener('click', function () {
-        activeLever = activeLever === L.id ? null : L.id;
-        syncWb();
+  nicheChips.forEach(function (c) {
+    c.addEventListener('click', function () { setNiche(c.getAttribute('data-niche')); });
+  });
+  if (nicheChips.length) setNiche('marquetry');
+
+  /* Price / pack ladder (illustrative) */
+  var AI_PACKS = {
+    single: {
+      listHKD: 78,
+      listUSD: 9.9,
+      rows: [
+        { ch: 'Marketplace', sub: 'Etsy-like fees · demo', feePct: 0.20, bar: 70 },
+        { ch: 'Subscription mkt', sub: 'CF-like · demo', feePct: 0.35, bar: 55 },
+        { ch: 'Owned site', sub: 'Payhip-class · demo', feePct: 0.05, bar: 95 }
+      ],
+      note: 'Single motif pack: lower list, easier trial. Owned-site fee band keeps more net — strategy sketch only, not a live SKU pick.'
+    },
+    mega: {
+      listHKD: 198,
+      listUSD: 24.9,
+      rows: [
+        { ch: 'Marketplace', sub: 'Etsy-like fees · demo', feePct: 0.20, bar: 78 },
+        { ch: 'Subscription mkt', sub: 'CF-like · demo', feePct: 0.35, bar: 60 },
+        { ch: 'Owned site', sub: 'Payhip-class · demo', feePct: 0.05, bar: 98 }
+      ],
+      note: 'Mega-bundle: higher AOV, slower convert. Kill metric idea: first 30 days net after fees vs hours spent (demo framing).'
+    }
+  };
+
+  function renderAiPack(key) {
+    var data = AI_PACKS[key];
+    var ladder = document.getElementById('ai-price-ladder');
+    if (!data || !ladder) return;
+    var html = '';
+    data.rows.forEach(function (r) {
+      var net = data.listUSD * (1 - r.feePct);
+      html += '<div class="ai-price-row"><div class="ch">' + r.ch + '<small>' + r.sub + '</small></div>' +
+        '<div class="ai-price-bar" aria-hidden="true"><span style="width:' + r.bar + '%"></span></div>' +
+        '<div class="ai-price-amt">~US$' + net.toFixed(1) + '</div></div>';
+    });
+    ladder.innerHTML = html;
+
+    var listEl = document.getElementById('ai-list-price');
+    var feesEl = document.getElementById('ai-fees');
+    var netEl = document.getElementById('ai-net');
+    var noteEl = document.getElementById('ai-pack-note');
+    if (listEl) listEl.textContent = 'HK$' + data.listHKD + ' / US$' + data.listUSD.toFixed(1);
+    // show marketplace fee as the headline drag
+    var mkt = data.rows[0];
+    if (feesEl) feesEl.textContent = Math.round(mkt.feePct * 100) + '% mkt';
+    if (netEl) netEl.textContent = '~US$' + (data.listUSD * (1 - mkt.feePct)).toFixed(1);
+    if (noteEl) noteEl.textContent = data.note;
+  }
+
+  var aiPackBtns = Array.prototype.slice.call(document.querySelectorAll('[data-aipack]'));
+  aiPackBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      aiPackBtns.forEach(function (b) { b.classList.remove('is-active'); });
+      btn.classList.add('is-active');
+      renderAiPack(btn.getAttribute('data-aipack'));
+    });
+  });
+  renderAiPack('single');
+
+  /* Implementation pipeline */
+  var PIPE = {
+    research: {
+      title: 'Research white space',
+      body: 'Scan theme × format gaps (marquetry seamless + POD variants vs floral clutter), competitor density, and buyer geo signals before generating.',
+      bi: 'RGM cue: write the gap hypothesis first — then make art that tests it.'
+    },
+    gen: {
+      title: 'Generate / curate (AI-assisted)',
+      body: 'Agentic AI helps draft motifs and seamless tiles; human curates for marquetry authenticity and listing-ready quality.',
+      bi: 'Risk cue: marketplace ToS / AI disclosure stays a live item to manage — not marked done here.'
+    },
+    thumb: {
+      title: 'Thumbnails & pack mockups',
+      body: 'Canva-style covers that read as Japanese wood marquetry at scroll speed — pack contents visible, POD applications hinted.',
+      bi: 'RGM cue: thumbnail is the shelf face; differentiation dies if it looks like stock grain.'
+    },
+    list: {
+      title: 'Multi-channel list',
+      body: 'Download packs on marketplaces and (strategy) owned delivery. Same marquetry master file, channel-specific titles and keywords.',
+      bi: 'Strategy only: owned-site / Payhip SKU choice is not claimed as decided.'
+    },
+    pod: {
+      title: 'Consumer POD publish',
+      body: 'Push the same art to print-on-demand channels — wall art, home, apparel-style — zero physical inventory, consumer-facing applications.',
+      bi: 'RGM cue: one file, many formats; track POD payout vs download packs separately.'
+    }
+  };
+
+  function showPipe(id) {
+    var d = PIPE[id];
+    var el = document.getElementById('ai-pipe-detail');
+    if (!d || !el) return;
+    el.innerHTML = '<h4>' + d.title + '</h4><p>' + d.body + '</p><p class="bi-cue">' + d.bi + '</p>';
+  }
+
+  var pipeSteps = Array.prototype.slice.call(document.querySelectorAll('.ai-pipe-step'));
+  pipeSteps.forEach(function (node) {
+    node.addEventListener('click', function () {
+      pipeSteps.forEach(function (n) {
+        n.classList.remove('is-active');
+        n.setAttribute('aria-pressed', 'false');
       });
-      leverCloud.appendChild(b);
+      node.classList.add('is-active');
+      node.setAttribute('aria-pressed', 'true');
+      showPipe(node.getAttribute('data-pipe'));
     });
-    STYLES.forEach(function (S) {
-      var b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'wb-chip';
-      b.setAttribute('role', 'listitem');
-      b.setAttribute('data-style', S.id);
-      b.setAttribute('aria-pressed', 'false');
-      b.textContent = S.label;
-      b.addEventListener('click', function () {
-        activeStyle = activeStyle === S.id ? null : S.id;
-        if (activeStyle && !activeLever) {
-          // soft-highlight related levers; don't auto-pick one
-        }
-        syncWb();
-      });
-      styleCloud.appendChild(b);
-    });
-  }
+  });
+  showPipe('research');
 
-  function syncWb() {
-    if (!leverCloud) return;
-    var style = activeStyle ? styleById(activeStyle) : null;
-    var related = style ? style.feeds : [];
-
-    Array.prototype.forEach.call(leverCloud.querySelectorAll('.wb-chip'), function (b) {
-      var id = b.getAttribute('data-lever');
-      var isActive = activeLever === id;
-      var isRel = !activeLever && related.indexOf(id) !== -1;
-      b.classList.toggle('is-active', isActive);
-      b.classList.toggle('is-related', isRel);
-      b.classList.toggle('is-dim', !!activeLever && !isActive);
-      if (!activeLever && !activeStyle) b.classList.remove('is-dim', 'is-related');
-      if (!activeLever && activeStyle) b.classList.toggle('is-dim', related.indexOf(id) === -1);
-      b.setAttribute('aria-pressed', String(isActive));
-    });
-
-    Array.prototype.forEach.call(styleCloud.querySelectorAll('.wb-chip'), function (b) {
-      var id = b.getAttribute('data-style');
-      var isActive = activeStyle === id;
-      var s = styleById(id);
-      var feedsActive = activeLever && s && s.feeds.indexOf(activeLever) !== -1;
-      b.classList.toggle('is-active', isActive);
-      b.classList.toggle('is-related', !activeStyle && !!activeLever && !!feedsActive);
-      b.classList.toggle('is-dim', (!!activeStyle && !isActive) || (!!activeLever && !activeStyle && !feedsActive));
-      if (!activeLever && !activeStyle) b.classList.remove('is-dim', 'is-related');
-      b.setAttribute('aria-pressed', String(isActive));
-    });
-
-    var L = activeLever ? leverById(activeLever) : null;
-    if (L) {
-      depthTitle.textContent = L.label;
-      meterFill.style.width = L.depth + '%';
-      meterLabel.textContent = 'Evidence depth · ' + L.depthLabel;
-      improvesEl.textContent = L.improves;
-      evidenceEl.textContent = L.evidence;
-      if (style && style.feeds.indexOf(L.id) !== -1) {
-        evidenceEl.textContent = L.evidence + ' Play-style cue: ' + style.blurb;
-      }
-      caveatEl.hidden = false;
-      caveatEl.textContent = L.caveat;
-    } else if (style) {
-      depthTitle.textContent = style.label;
-      meterFill.style.width = '50%';
-      meterLabel.textContent = 'Play-style map · pick a lever for depth';
-      improvesEl.textContent = style.blurb;
-      evidenceEl.textContent = 'Mainly feeds: ' + style.feeds.map(function (fid) {
-        var x = leverById(fid);
-        return x ? x.label : fid;
-      }).join(' · ') + '. Tap a highlighted lever to see how deep that evidence theme goes.';
-      caveatEl.hidden = false;
-      caveatEl.textContent = 'Illustrative mapping for a fun demo — not a prescription for how you should play.';
-    } else {
-      depthTitle.textContent = 'How deep?';
-      meterFill.style.width = '35%';
-      meterLabel.textContent = 'Pick a lever to explore depth';
-      improvesEl.textContent = 'What improves and how deep the evidence feels will show up here.';
-      evidenceEl.textContent = 'Start with a lever above — or peek at a play style to see which levers it mainly feeds.';
-      caveatEl.hidden = true;
-      caveatEl.textContent = '';
+  /* Analytics mock dashboard */
+  var LENSES = {
+    scale: {
+      rev: 'HK$2.4k',
+      revSub: 'mkt 55% · POD 30% · owned 15% · demo',
+      fee: '18%',
+      conv: '2.1%',
+      time: '6h',
+      note: 'Scale lens: double down on channels where net after fees clears your hour rate — demo pattern, not live P&L.'
+    },
+    iterate: {
+      rev: 'HK$1.1k',
+      revSub: 'mkt 70% · POD 25% · owned 5% · demo',
+      fee: '22%',
+      conv: '1.4%',
+      time: '9h',
+      note: 'Iterate lens: thumbnails, titles, or pack architecture need a test — conversion soft vs time spent.'
+    },
+    kill: {
+      rev: 'HK$0.3k',
+      revSub: 'thin across channels · demo',
+      fee: '28%',
+      conv: '0.6%',
+      time: '11h',
+      note: 'Kill lens: fees + hours eat the story. Park the SKU concept; recycle art into a tighter niche test.'
     }
+  };
+
+  function setLens(id) {
+    var L = LENSES[id];
+    if (!L) return;
+    var map = [
+      ['ai-rev', L.rev],
+      ['ai-rev-sub', L.revSub],
+      ['ai-fee-drag', L.fee],
+      ['ai-conv', L.conv],
+      ['ai-time', L.time],
+      ['ai-lens-note', L.note]
+    ];
+    map.forEach(function (pair) {
+      var el = document.getElementById(pair[0]);
+      if (el) el.textContent = pair[1];
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-lens]'), function (b) {
+      b.classList.toggle('is-active', b.getAttribute('data-lens') === id);
+    });
   }
 
-  buildWbUI();
-  syncWb();
+  Array.prototype.forEach.call(document.querySelectorAll('[data-lens]'), function (b) {
+    b.addEventListener('click', function () { setLens(b.getAttribute('data-lens')); });
+  });
+  setLens('scale');
+
 
 })();
