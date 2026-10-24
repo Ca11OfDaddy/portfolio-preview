@@ -384,243 +384,418 @@
   var mbaTabs = document.querySelector('[data-tabs="mba"]');
   if (mbaTabs) initTabs(mbaTabs);
 
-  /* --- Agentic AI · digital arts RGM --- */
-  var aiStepper = document.querySelector('[data-stepper="ai-rgm"]');
+  /* --- Agentic AI · cognitive gaming evidence --- */
+  var aiStepper = document.querySelector('[data-stepper="ai-gamer"]');
   if (aiStepper) initStepper(aiStepper);
 
-  /* White space niche chips */
-  var NICHE_COPY = {
-    marquetry: {
-      theme: 'Marquetry / yosegi',
-      themeP: 'Japanese wood inlay motifs are thinner on Etsy/CF than endless florals — authenticity cue for JP + design buyers.',
-      format: 'Seamless + POD',
-      formatP: 'Same art → seamless download pack and wallpaper / wall-art / home POD variants — not paper-only.',
-      geo: 'JP · US',
-      geoP: 'Demo pattern: JP buyers skew kimono / Japandi papers; US buyers lean leather & wood textures. Marquetry sits in both.'
+  var BENEFITS = {
+    action: {
+      note: 'Action / FPS literature (Bediou, Wang): strongest replicated signals on attention, spatial cognition, and perception — especially cross-sectional; intervention effects are smaller.',
+      cards: [
+        { h: 'Top-down attention', num: 'Attention', p: 'Selective / sustained attention under clutter. Literature metric: Hedges’ g on attention batteries (e.g. Bediou CS g ≈ 0.63).' },
+        { h: 'Spatial cognition', num: 'Spatial', p: 'Mental rotation, spatial arrays, useful field of view. CS spatial g ≈ 0.75 in Bediou 2018; INT spatial smaller.' },
+        { h: 'Perception', num: 'Perception', p: 'Fast visual discrimination and peripheral processing. CS perception among the largest action effects; INT more cautious.' }
+      ]
     },
-    kimono: {
-      theme: 'Kimono / Japandi',
-      themeP: 'Silk / Japandi paper niches still have room vs mass florals — proven buyer interest on JP-facing listings (demo signal).',
-      format: 'Seamless packs',
-      formatP: 'Strong as downloadable paper; POD wallpaper / home soft goods extend the same motif.',
-      geo: 'JP-led',
-      geoP: 'Demo: JP geo over-indexes. Pair with US wood/leather textures for a two-geo catalog story.'
+    rts: {
+      note: 'RTS / strategy: flexibility and switching are the headline story (Glass 2013; Basak 2008). Saija 2023 training meta shows modest overall g with weak genre prediction.',
+      cards: [
+        { h: 'Cognitive flexibility', num: 'Flexibility', p: 'Task-switching and set-shifting under dual goals. Glass 2013 (StarCraft) reports a large flexibility gain vs Sims (Bayes factor ≈ 40.8) — off the g-axis callout.' },
+        { h: 'Selective attention', num: 'Attention', p: 'Filtering relevant units / alerts. Saija attention/perception g ≈ 0.27 as a training-effect anchor.' },
+        { h: 'Higher-order cognition', num: 'Executive', p: 'Planning and multi-constraint control. Saija higher-order g ≈ 0.31; Basak η² on switching / WM kept as callouts.' }
+      ]
     },
-    charred: {
-      theme: 'Charred wood / grain',
-      themeP: 'Closest catalog cousin to marquetry — wood-grain seamless papers already exist as a texture lane (demo context).',
-      format: 'Texture + POD',
-      formatP: 'Works as seamless fill and as POD surface for home / apparel-style prints.',
-      geo: 'US-led',
-      geoP: 'Demo: US buyers lean leather & wood textures. Marquetry upgrades “wood” from stock grain to craft inlay.'
-    },
-    floral: {
-      theme: 'Commodity floral',
-      themeP: 'Saturated lane — high competitor density, race-to-bottom list prices. Avoid as hero; use only as contrast.',
-      format: 'Paper-only clutter',
-      formatP: 'Most listings stop at paper packs; little differentiation once the rose looks familiar.',
-      geo: 'Global mass',
-      geoP: 'No clear geo moat — everyone sells florals everywhere.'
+    puzzle: {
+      note: 'Commercial brain-training / puzzle (Bonnechère 2020): small near-transfer on speed and WM/executive; verbal memory weaker; far transfer remains disputed.',
+      cards: [
+        { h: 'Processing speed', num: 'Speed', p: 'Timed perceptual / motor speed drills. Bonnechère SMD ≈ 0.40 — the largest near-transfer in that meta.' },
+        { h: 'Working memory (near)', num: 'Memory', p: 'Near-transfer WM tasks. SMD ≈ 0.21 — real but small; don’t promise far-transfer IQ.' },
+        { h: 'Executive (near)', num: 'Executive', p: 'Inhibition / switching drills close to the game. SMD ≈ 0.21; Sala et al. 2018 urge caution on far transfer.' }
+      ]
     }
   };
 
-  var nicheChips = Array.prototype.slice.call(document.querySelectorAll('#ai-niche-chips .ai-chip'));
-  var gapCards = Array.prototype.slice.call(document.querySelectorAll('#ai-gap-grid .gap-card'));
-
-  function setNiche(id) {
-    var copy = NICHE_COPY[id];
-    if (!copy) return;
-    nicheChips.forEach(function (c) {
-      var on = c.getAttribute('data-niche') === id;
-      c.classList.toggle('is-active', on);
-      c.setAttribute('aria-pressed', String(on));
-    });
-    gapCards.forEach(function (card) {
-      var forAttr = card.getAttribute('data-for') || '';
-      var on = forAttr.split(/\s+/).indexOf(id) !== -1;
-      card.classList.toggle('is-on', on);
-      card.classList.toggle('is-dim', !on);
-    });
-    var t = document.getElementById('ai-gap-theme');
-    var tp = document.getElementById('ai-gap-theme-p');
-    var f = document.getElementById('ai-gap-format');
-    var fp = document.getElementById('ai-gap-format-p');
-    var g = document.getElementById('ai-gap-geo');
-    var gp = document.getElementById('ai-gap-geo-p');
-    if (t) t.textContent = copy.theme;
-    if (tp) tp.textContent = copy.themeP;
-    if (f) f.textContent = copy.format;
-    if (fp) fp.textContent = copy.formatP;
-    if (g) g.textContent = copy.geo;
-    if (gp) gp.textContent = copy.geoP;
-  }
-
-  nicheChips.forEach(function (c) {
-    c.addEventListener('click', function () { setNiche(c.getAttribute('data-niche')); });
-  });
-  if (nicheChips.length) setNiche('marquetry');
-
-  /* Price / pack ladder (illustrative) */
-  var AI_PACKS = {
-    single: {
-      listHKD: 78,
-      listUSD: 9.9,
-      rows: [
-        { ch: 'Marketplace', sub: 'Etsy-like fees · demo', feePct: 0.20, bar: 70 },
-        { ch: 'Subscription mkt', sub: 'CF-like · demo', feePct: 0.35, bar: 55 },
-        { ch: 'Owned site', sub: 'Payhip-class · demo', feePct: 0.05, bar: 95 }
-      ],
-      note: 'Single motif pack: lower list, easier trial. Owned-site fee band keeps more net — strategy sketch only, not a live SKU pick.'
-    },
-    mega: {
-      listHKD: 198,
-      listUSD: 24.9,
-      rows: [
-        { ch: 'Marketplace', sub: 'Etsy-like fees · demo', feePct: 0.20, bar: 78 },
-        { ch: 'Subscription mkt', sub: 'CF-like · demo', feePct: 0.35, bar: 60 },
-        { ch: 'Owned site', sub: 'Payhip-class · demo', feePct: 0.05, bar: 98 }
-      ],
-      note: 'Mega-bundle: higher AOV, slower convert. Kill metric idea: first 30 days net after fees vs hours spent (demo framing).'
-    }
-  };
-
-  function renderAiPack(key) {
-    var data = AI_PACKS[key];
-    var ladder = document.getElementById('ai-price-ladder');
-    if (!data || !ladder) return;
+  function renderBenefits(genre) {
+    var data = BENEFITS[genre];
+    var grid = document.getElementById('ai-benefit-cards');
+    var note = document.getElementById('ai-benefit-note');
+    if (!data || !grid) return;
     var html = '';
-    data.rows.forEach(function (r) {
-      var net = data.listUSD * (1 - r.feePct);
-      html += '<div class="ai-price-row"><div class="ch">' + r.ch + '<small>' + r.sub + '</small></div>' +
-        '<div class="ai-price-bar" aria-hidden="true"><span style="width:' + r.bar + '%"></span></div>' +
-        '<div class="ai-price-amt">~US$' + net.toFixed(1) + '</div></div>';
+    data.cards.forEach(function (c, i) {
+      html += '<div class="gap-card' + (i === 0 ? ' highlight' : '') + '"><h4>' + c.h + '</h4>' +
+        '<p class="gap-num mid">' + c.num + '</p><p>' + c.p + '</p></div>';
     });
-    ladder.innerHTML = html;
-
-    var listEl = document.getElementById('ai-list-price');
-    var feesEl = document.getElementById('ai-fees');
-    var netEl = document.getElementById('ai-net');
-    var noteEl = document.getElementById('ai-pack-note');
-    if (listEl) listEl.textContent = 'HK$' + data.listHKD + ' / US$' + data.listUSD.toFixed(1);
-    // show marketplace fee as the headline drag
-    var mkt = data.rows[0];
-    if (feesEl) feesEl.textContent = Math.round(mkt.feePct * 100) + '% mkt';
-    if (netEl) netEl.textContent = '~US$' + (data.listUSD * (1 - mkt.feePct)).toFixed(1);
-    if (noteEl) noteEl.textContent = data.note;
+    grid.innerHTML = html;
+    if (note) note.textContent = data.note;
+    Array.prototype.forEach.call(document.querySelectorAll('[data-benefit-genre]'), function (b) {
+      b.classList.toggle('is-active', b.getAttribute('data-benefit-genre') === genre);
+    });
   }
 
-  var aiPackBtns = Array.prototype.slice.call(document.querySelectorAll('[data-aipack]'));
-  aiPackBtns.forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      aiPackBtns.forEach(function (b) { b.classList.remove('is-active'); });
-      btn.classList.add('is-active');
-      renderAiPack(btn.getAttribute('data-aipack'));
+  Array.prototype.forEach.call(document.querySelectorAll('[data-benefit-genre]'), function (b) {
+    b.addEventListener('click', function () { renderBenefits(b.getAttribute('data-benefit-genre')); });
+  });
+
+  var genreCards = Array.prototype.slice.call(document.querySelectorAll('#ai-genre-grid .ai-genre-card'));
+  genreCards.forEach(function (card) {
+    card.addEventListener('click', function () {
+      var g = card.getAttribute('data-genre');
+      genreCards.forEach(function (c) {
+        var on = c === card;
+        c.classList.toggle('is-active', on);
+        c.setAttribute('aria-pressed', String(on));
+      });
+      renderBenefits(g);
     });
   });
-  renderAiPack('single');
+  renderBenefits('action');
 
-  /* Implementation pipeline */
-  var PIPE = {
-    research: {
-      title: 'Research white space',
-      body: 'Scan theme × format gaps (marquetry seamless + POD variants vs floral clutter), competitor density, and buyer geo signals before generating.',
-      bi: 'RGM cue: write the gap hypothesis first — then make art that tests it.'
+  /* Evidence scatter — published points only */
+  var DOMAIN_COLORS = {
+    attention: '#2f6fd0',
+    spatial: '#1d9a6c',
+    perception: '#c45c26',
+    flexibility: '#7b5cff',
+    memory: '#c9a227',
+    speed: '#0d9488',
+    overall: '#5a6478'
+  };
+  var GENRE_X = { action: 0, rts: 1, puzzle: 2 };
+  var GENRE_LABEL = { action: 'Action / FPS', rts: 'RTS / Strategy', puzzle: 'Puzzle / Brain' };
+
+  // jitter so overlapping g values remain tappable
+  var SCATTER_POINTS = [
+    // Bediou et al. 2018 Psych Bulletin doi:10.1037/bul0000130
+    { id: 'b18-cs-perc', genre: 'action', domain: 'perception', g: 0.78, design: 'cs', cite: 'Bediou et al., Psychological Bulletin', year: 2018, doi: '10.1037/bul0000130', label: 'CS perception', note: '' },
+    { id: 'b18-cs-att', genre: 'action', domain: 'attention', g: 0.63, design: 'cs', cite: 'Bediou et al., Psychological Bulletin', year: 2018, doi: '10.1037/bul0000130', label: 'CS top-down attention', note: '' },
+    { id: 'b18-cs-spa', genre: 'action', domain: 'spatial', g: 0.75, design: 'cs', cite: 'Bediou et al., Psychological Bulletin', year: 2018, doi: '10.1037/bul0000130', label: 'CS spatial cognition', note: '' },
+    { id: 'b18-cs-multi', genre: 'action', domain: 'attention', g: 0.55, design: 'cs', cite: 'Bediou et al., Psychological Bulletin', year: 2018, doi: '10.1037/bul0000130', label: 'CS multitasking', note: '' },
+    { id: 'b18-cs-inh', genre: 'action', domain: 'flexibility', g: 0.31, design: 'cs', cite: 'Bediou et al., Psychological Bulletin', year: 2018, doi: '10.1037/bul0000130', label: 'CS inhibition', note: '' },
+    { id: 'b18-int-ov', genre: 'action', domain: 'overall', g: 0.34, design: 'int', cite: 'Bediou et al., Psychological Bulletin', year: 2018, doi: '10.1037/bul0000130', label: 'INT overall', note: '' },
+    { id: 'b18-int-spa', genre: 'action', domain: 'spatial', g: 0.45, design: 'int', cite: 'Bediou et al., Psychological Bulletin', year: 2018, doi: '10.1037/bul0000130', label: 'INT spatial', note: '' },
+    { id: 'b18-int-att', genre: 'action', domain: 'attention', g: 0.31, design: 'int', cite: 'Bediou et al., Psychological Bulletin', year: 2018, doi: '10.1037/bul0000130', label: 'INT top-down attention', note: '' },
+    { id: 'b18-int-perc', genre: 'action', domain: 'perception', g: 0.23, design: 'int', cite: 'Bediou et al., Psychological Bulletin', year: 2018, doi: '10.1037/bul0000130', label: 'INT perception', note: 'Non-significant / cautious — include for honesty.' },
+    // Wang et al. 2016 Front Psychol PMC4911405
+    { id: 'w16-ov', genre: 'action', domain: 'overall', g: 0.58, design: 'int', cite: 'Wang et al., Frontiers in Psychology', year: 2016, doi: 'PMC4911405', label: 'INT overall (d)', note: 'Cohen’s d ≈ g for display.' },
+    { id: 'w16-speed', genre: 'action', domain: 'speed', g: 0.81, design: 'int', cite: 'Wang et al., Frontiers in Psychology', year: 2016, doi: 'PMC4911405', label: 'Young adults processing speed / attention (d)', note: '' },
+    { id: 'w16-vis', genre: 'action', domain: 'spatial', g: 0.70, design: 'int', cite: 'Wang et al., Frontiers in Psychology', year: 2016, doi: 'PMC4911405', label: 'Young adults visuospatial (d)', note: '' },
+    { id: 'w16-exec', genre: 'action', domain: 'flexibility', g: 0.64, design: 'int', cite: 'Wang et al., Frontiers in Psychology', year: 2016, doi: 'PMC4911405', label: 'Young adults executive (d)', note: '' },
+    // Bediou / Green update ~2023 doi:10.1037/tmb0000102
+    { id: 'b23-cs', genre: 'action', domain: 'overall', g: 0.64, design: 'cs', cite: 'Bediou / Green update (TMB)', year: 2023, doi: '10.1037/tmb0000102', label: 'CS overall', note: '' },
+    { id: 'b23-int', genre: 'action', domain: 'overall', g: 0.30, design: 'int', cite: 'Bediou / Green update (TMB)', year: 2023, doi: '10.1037/tmb0000102', label: 'INT overall', note: '' },
+    // Saija et al. 2023 PLOS One doi:10.1371/journal.pone.0285925
+    { id: 's23-ov', genre: 'rts', domain: 'overall', g: 0.25, design: 'int', cite: 'Saija et al., PLOS One', year: 2023, doi: '10.1371/journal.pone.0285925', label: 'Overall cognition', note: 'Genre labels were weak predictors; gameplay features mattered.' },
+    { id: 's23-att', genre: 'rts', domain: 'attention', g: 0.27, design: 'int', cite: 'Saija et al., PLOS One', year: 2023, doi: '10.1371/journal.pone.0285925', label: 'Attention / perception', note: '' },
+    { id: 's23-hoc', genre: 'rts', domain: 'flexibility', g: 0.31, design: 'int', cite: 'Saija et al., PLOS One', year: 2023, doi: '10.1371/journal.pone.0285925', label: 'Higher-order cognition', note: '' },
+    { id: 's23-mem', genre: 'rts', domain: 'memory', g: -0.14, design: 'int', cite: 'Saija et al., PLOS One', year: 2023, doi: '10.1371/journal.pone.0285925', label: 'Memory', note: 'Non-significant / negative — plotted for honesty.' },
+    // Bonnechère et al. 2020 Sci Rep doi:10.1038/s41598-020-72281-3
+    { id: 'bn20-spd', genre: 'puzzle', domain: 'speed', g: 0.40, design: 'int', cite: 'Bonnechère et al., Scientific Reports', year: 2020, doi: '10.1038/s41598-020-72281-3', label: 'Processing speed (SMD)', note: '' },
+    { id: 'bn20-wm', genre: 'puzzle', domain: 'memory', g: 0.21, design: 'int', cite: 'Bonnechère et al., Scientific Reports', year: 2020, doi: '10.1038/s41598-020-72281-3', label: 'Working memory (SMD)', note: '' },
+    { id: 'bn20-exec', genre: 'puzzle', domain: 'flexibility', g: 0.21, design: 'int', cite: 'Bonnechère et al., Scientific Reports', year: 2020, doi: '10.1038/s41598-020-72281-3', label: 'Executive function (SMD)', note: '' },
+    { id: 'bn20-verb', genre: 'puzzle', domain: 'memory', g: 0.12, design: 'int', cite: 'Bonnechère et al., Scientific Reports', year: 2020, doi: '10.1038/s41598-020-72281-3', label: 'Verbal memory (SMD)', note: '' }
+  ];
+
+  // stable per-point jitter on x within genre lane
+  SCATTER_POINTS.forEach(function (p, i) {
+    var hash = (i * 17 + p.g * 100) % 7;
+    p._jx = GENRE_X[p.genre] + (hash - 3) * 0.06;
+  });
+
+  var scatterFilter = { genre: 'all', domain: 'all' };
+  var scatterChart = null;
+  var chartLoading = false;
+
+  function showPointDetail(p) {
+    var el = document.getElementById('ai-point-detail');
+    if (!el || !p) return;
+    var designLabel = p.design === 'cs' ? 'Cross-sectional' : 'Intervention';
+    var warn = p.note ? '<span class="pill warn">Caution</span>' : '';
+    el.innerHTML = '<h4>' + p.label + ' · g = ' + p.g.toFixed(2) + '</h4>' +
+      '<div class="meta">' +
+      '<span class="pill">' + GENRE_LABEL[p.genre] + '</span>' +
+      '<span class="pill">' + p.domain + '</span>' +
+      '<span class="pill">' + designLabel + '</span>' + warn +
+      '</div>' +
+      '<p><strong>' + p.cite + ' (' + p.year + ')</strong> · ' + p.doi + '</p>' +
+      (p.note ? '<p>' + p.note + '</p>' : '');
+  }
+
+  function filteredPoints() {
+    return SCATTER_POINTS.filter(function (p) {
+      if (scatterFilter.genre !== 'all' && p.genre !== scatterFilter.genre) return false;
+      if (scatterFilter.domain !== 'all' && p.domain !== scatterFilter.domain) return false;
+      return true;
+    });
+  }
+
+  function buildDatasets(points) {
+    // two datasets for legend/shape: CS circles, INT triangles
+    function toData(list) {
+      return list.map(function (p) {
+        return {
+          x: p._jx,
+          y: p.g,
+          point: p,
+          backgroundColor: DOMAIN_COLORS[p.domain] || '#5a6478',
+          borderColor: DOMAIN_COLORS[p.domain] || '#5a6478'
+        };
+      });
+    }
+    var cs = points.filter(function (p) { return p.design === 'cs'; });
+    var intp = points.filter(function (p) { return p.design === 'int'; });
+    return [
+      {
+        label: 'Cross-sectional',
+        data: toData(cs),
+        pointStyle: 'circle',
+        pointRadius: 7,
+        pointHoverRadius: 10,
+        backgroundColor: function (ctx) {
+          var raw = ctx.raw; return raw && raw.backgroundColor ? raw.backgroundColor : '#2f6fd0';
+        },
+        borderColor: function (ctx) {
+          var raw = ctx.raw; return raw && raw.borderColor ? raw.borderColor : '#2f6fd0';
+        },
+        borderWidth: 1.5
+      },
+      {
+        label: 'Intervention',
+        data: toData(intp),
+        pointStyle: 'triangle',
+        pointRadius: 8,
+        pointHoverRadius: 11,
+        backgroundColor: function (ctx) {
+          var raw = ctx.raw; return raw && raw.backgroundColor ? raw.backgroundColor : '#2f6fd0';
+        },
+        borderColor: function (ctx) {
+          var raw = ctx.raw; return raw && raw.borderColor ? raw.borderColor : '#2f6fd0';
+        },
+        borderWidth: 1.5
+      }
+    ];
+  }
+
+  function chartColors() {
+    var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    return {
+      text: dark ? '#a3adc2' : '#5a6478',
+      grid: dark ? '#26324a' : '#dfe4ee',
+      zero: dark ? '#8fb3ff' : '#1d3a6e'
+    };
+  }
+
+  function renderScatter() {
+    var canvas = document.getElementById('ai-scatter');
+    if (!canvas || typeof Chart === 'undefined') return;
+    var points = filteredPoints();
+    var cols = chartColors();
+    var datasets = buildDatasets(points);
+
+    // Chart.js needs per-point colors as arrays when not using scriptable in all versions — set arrays
+    datasets.forEach(function (ds) {
+      ds.backgroundColor = ds.data.map(function (d) { return d.backgroundColor; });
+      ds.borderColor = ds.data.map(function (d) { return d.borderColor; });
+    });
+
+    if (scatterChart) {
+      scatterChart.data.datasets = datasets;
+      scatterChart.options.scales.x.ticks.color = cols.text;
+      scatterChart.options.scales.y.ticks.color = cols.text;
+      scatterChart.options.scales.x.grid.color = cols.grid;
+      scatterChart.options.scales.y.grid.color = cols.grid;
+      scatterChart.update();
+      return;
+    }
+
+    scatterChart = new Chart(canvas, {
+      type: 'scatter',
+      data: { datasets: datasets },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 280 },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              title: function (items) {
+                var p = items[0] && items[0].raw && items[0].raw.point;
+                return p ? p.label : '';
+              },
+              label: function (item) {
+                var p = item.raw && item.raw.point;
+                if (!p) return '';
+                return [
+                  GENRE_LABEL[p.genre] + ' · ' + p.domain,
+                  'g / SMD = ' + p.g.toFixed(2) + ' · ' + (p.design === 'cs' ? 'cross-sectional' : 'intervention'),
+                  p.cite + ' (' + p.year + ')'
+                ];
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            min: -0.45,
+            max: 2.45,
+            ticks: {
+              color: cols.text,
+              callback: function (val) {
+                if (Math.abs(val - 0) < 0.01) return 'Action';
+                if (Math.abs(val - 1) < 0.01) return 'RTS';
+                if (Math.abs(val - 2) < 0.01) return 'Puzzle';
+                return '';
+              },
+              stepSize: 1
+            },
+            grid: { color: cols.grid },
+            title: { display: true, text: 'Game genre', color: cols.text, font: { size: 12, weight: '600' } }
+          },
+          y: {
+            title: { display: true, text: "Effect size (Hedges' g / SMD)", color: cols.text, font: { size: 12, weight: '600' } },
+            ticks: { color: cols.text },
+            grid: { color: cols.grid },
+            suggestedMin: -0.3,
+            suggestedMax: 1.0
+          }
+        },
+        onClick: function (evt, elements) {
+          if (!elements.length) return;
+          var el = elements[0];
+          var ds = scatterChart.data.datasets[el.datasetIndex];
+          var raw = ds.data[el.index];
+          if (raw && raw.point) showPointDetail(raw.point);
+        }
+      }
+    });
+  }
+
+  function loadChartJs(cb) {
+    if (typeof Chart !== 'undefined') { cb(); return; }
+    if (chartLoading) {
+      var t = setInterval(function () {
+        if (typeof Chart !== 'undefined') { clearInterval(t); cb(); }
+      }, 50);
+      return;
+    }
+    chartLoading = true;
+    var s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/chart.js@4';
+    s.async = true;
+    s.onload = function () { chartLoading = false; cb(); };
+    s.onerror = function () { chartLoading = false; console.error('Chart.js failed to load'); };
+    document.head.appendChild(s);
+  }
+
+  function ensureScatter() {
+    loadChartJs(function () { renderScatter(); });
+  }
+
+  // Genre / domain filter chips
+  Array.prototype.forEach.call(document.querySelectorAll('[data-scatter-genre]'), function (btn) {
+    btn.addEventListener('click', function () {
+      scatterFilter.genre = btn.getAttribute('data-scatter-genre');
+      Array.prototype.forEach.call(document.querySelectorAll('[data-scatter-genre]'), function (b) {
+        var on = b === btn;
+        b.classList.toggle('is-active', on);
+        b.setAttribute('aria-pressed', String(on));
+      });
+      ensureScatter();
+    });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-scatter-domain]'), function (btn) {
+    btn.addEventListener('click', function () {
+      scatterFilter.domain = btn.getAttribute('data-scatter-domain');
+      Array.prototype.forEach.call(document.querySelectorAll('[data-scatter-domain]'), function (b) {
+        var on = b === btn;
+        b.classList.toggle('is-active', on);
+        b.setAttribute('aria-pressed', String(on));
+      });
+      ensureScatter();
+    });
+  });
+
+  // Lazy-init chart when evidence step shown
+  if (aiStepper) {
+    var aiTabs = aiStepper.querySelectorAll('.stepper-tabs [role="tab"]');
+    Array.prototype.forEach.call(aiTabs, function (t) {
+      t.addEventListener('click', function () {
+        if (+t.getAttribute('data-step') === 2) ensureScatter();
+      });
+    });
+    var aiDots = aiStepper.querySelectorAll('.step-dots .dot');
+    Array.prototype.forEach.call(aiDots, function (d) {
+      d.addEventListener('click', function () {
+        if (+d.getAttribute('data-step') === 2) ensureScatter();
+      });
+    });
+    var nextBtn = aiStepper.querySelector('.step-next');
+    var prevBtn = aiStepper.querySelector('.step-prev');
+    function checkEvidenceStep() {
+      var active = aiStepper.querySelector('.step-panel.is-active');
+      if (active && active.getAttribute('data-step') === '2') ensureScatter();
+    }
+    if (nextBtn) nextBtn.addEventListener('click', function () { setTimeout(checkEvidenceStep, 0); });
+    if (prevBtn) prevBtn.addEventListener('click', function () { setTimeout(checkEvidenceStep, 0); });
+  }
+
+  // Re-tint chart on theme toggle
+  var themeBtn = document.querySelector('.theme-toggle');
+  if (themeBtn) {
+    themeBtn.addEventListener('click', function () {
+      if (scatterChart) setTimeout(function () { renderScatter(); }, 0);
+    });
+  }
+
+  /* Agentic implication pipe */
+  var AGENT = {
+    goal: {
+      title: 'Goal intake',
+      body: 'Ask what to improve: attention under clutter, spatial skill, cognitive flexibility, or light speed / WM practice. Refuse vague “make me smarter” goals.',
+      bi: 'Mindset: goal first — then pick the evidence lane.'
     },
-    gen: {
-      title: 'Generate / curate (AI-assisted)',
-      body: 'Agentic AI helps draft motifs and seamless tiles; human curates for marquetry authenticity and listing-ready quality.',
-      bi: 'Risk cue: marketplace ToS / AI disclosure stays a live item to manage — not marked done here.'
+    rec: {
+      title: 'Recommend genre',
+      body: 'Map goal → genre using the scatter: attention / spatial → action; flexibility → RTS; near-transfer speed / WM → puzzle / brain-training.',
+      bi: 'Cite the paper class (CS vs INT) so the user sees correlational vs causal weight.'
     },
-    thumb: {
-      title: 'Thumbnails & pack mockups',
-      body: 'Canva-style covers that read as Japanese wood marquetry at scroll speed — pack contents visible, POD applications hinted.',
-      bi: 'RGM cue: thumbnail is the shelf face; differentiation dies if it looks like stock grain.'
+    dose: {
+      title: 'Dosage hypothesis',
+      body: 'Propose distributed play — action literature often uses ≥8–10 hours across sessions — as a testable plan, not a promise.',
+      bi: 'RGM cue: treat hours like a promo test window with a clear stop rule.'
     },
-    list: {
-      title: 'Multi-channel list',
-      body: 'Download packs on marketplaces and (strategy) owned delivery. Same marquetry master file, channel-specific titles and keywords.',
-      bi: 'Strategy only: owned-site / Payhip SKU choice is not claimed as decided.'
+    track: {
+      title: 'Track near-transfer',
+      body: 'Pre/post tasks close to the claimed domain (e.g. useful field of view, task-switching cost). Ignore vanity streak counters.',
+      bi: 'Measure what the meta-analyses actually measured.'
     },
-    pod: {
-      title: 'Consumer POD publish',
-      body: 'Push the same art to print-on-demand channels — wall art, home, apparel-style — zero physical inventory, consumer-facing applications.',
-      bi: 'RGM cue: one file, many formats; track POD payout vs download packs separately.'
+    kill: {
+      title: 'Kill / keep',
+      body: 'If near-transfer tasks don’t move after the planned window, stop or switch genre. Don’t escalate dosage to chase far-transfer IQ myths.',
+      bi: 'Honest stop-loss — same discipline as a promo kill decision.'
     }
   };
 
-  function showPipe(id) {
-    var d = PIPE[id];
-    var el = document.getElementById('ai-pipe-detail');
+  function showAgent(id) {
+    var d = AGENT[id];
+    var el = document.getElementById('ai-agent-detail');
     if (!d || !el) return;
     el.innerHTML = '<h4>' + d.title + '</h4><p>' + d.body + '</p><p class="bi-cue">' + d.bi + '</p>';
   }
 
-  var pipeSteps = Array.prototype.slice.call(document.querySelectorAll('.ai-pipe-step'));
-  pipeSteps.forEach(function (node) {
+  var agentSteps = Array.prototype.slice.call(document.querySelectorAll('#ai-agent-pipe .ai-pipe-step'));
+  agentSteps.forEach(function (node) {
     node.addEventListener('click', function () {
-      pipeSteps.forEach(function (n) {
+      agentSteps.forEach(function (n) {
         n.classList.remove('is-active');
         n.setAttribute('aria-pressed', 'false');
       });
       node.classList.add('is-active');
       node.setAttribute('aria-pressed', 'true');
-      showPipe(node.getAttribute('data-pipe'));
+      showAgent(node.getAttribute('data-agent'));
     });
   });
-  showPipe('research');
-
-  /* Analytics mock dashboard */
-  var LENSES = {
-    scale: {
-      rev: 'HK$2.4k',
-      revSub: 'mkt 55% · POD 30% · owned 15% · demo',
-      fee: '18%',
-      conv: '2.1%',
-      time: '6h',
-      note: 'Scale lens: double down on channels where net after fees clears your hour rate — demo pattern, not live P&L.'
-    },
-    iterate: {
-      rev: 'HK$1.1k',
-      revSub: 'mkt 70% · POD 25% · owned 5% · demo',
-      fee: '22%',
-      conv: '1.4%',
-      time: '9h',
-      note: 'Iterate lens: thumbnails, titles, or pack architecture need a test — conversion soft vs time spent.'
-    },
-    kill: {
-      rev: 'HK$0.3k',
-      revSub: 'thin across channels · demo',
-      fee: '28%',
-      conv: '0.6%',
-      time: '11h',
-      note: 'Kill lens: fees + hours eat the story. Park the SKU concept; recycle art into a tighter niche test.'
-    }
-  };
-
-  function setLens(id) {
-    var L = LENSES[id];
-    if (!L) return;
-    var map = [
-      ['ai-rev', L.rev],
-      ['ai-rev-sub', L.revSub],
-      ['ai-fee-drag', L.fee],
-      ['ai-conv', L.conv],
-      ['ai-time', L.time],
-      ['ai-lens-note', L.note]
-    ];
-    map.forEach(function (pair) {
-      var el = document.getElementById(pair[0]);
-      if (el) el.textContent = pair[1];
-    });
-    Array.prototype.forEach.call(document.querySelectorAll('[data-lens]'), function (b) {
-      b.classList.toggle('is-active', b.getAttribute('data-lens') === id);
-    });
-  }
-
-  Array.prototype.forEach.call(document.querySelectorAll('[data-lens]'), function (b) {
-    b.addEventListener('click', function () { setLens(b.getAttribute('data-lens')); });
-  });
-  setLens('scale');
+  showAgent('goal');
 
 
 })();
